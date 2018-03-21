@@ -1,6 +1,14 @@
-package simulation;
+package examples;
 
-import java.io.FileNotFoundException;
+/*
+ * Title:        CloudSim Toolkit
+ * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
+ *               of Clouds
+ * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
+ *
+ * Copyright (c) 2009, The University of Melbourne, Australia
+ */
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,13 +33,12 @@ import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
-import org.cloudbus.cloudsim.util.WorkloadFileReader;
 
 /**
- * Scalable Simulation
- * By Vinicius Figueiredo - 21/03/2018
+ * An example showing how to create
+ * scalable simulations.
  */
-public class Simulation1 {
+public class Example6 {
 
 	/** The cloudlet list. */
 	private static List<Cloudlet> cloudletList;
@@ -66,13 +73,38 @@ public class Simulation1 {
 		return list;
 	}
 
+
+	private static List<Cloudlet> createCloudlet(int userId, int cloudlets){
+		// Creates a container to store Cloudlets
+		LinkedList<Cloudlet> list = new LinkedList<Cloudlet>();
+
+		//cloudlet parameters
+		long length = 1000;
+		long fileSize = 300;
+		long outputSize = 300;
+		int pesNumber = 1;
+		UtilizationModel utilizationModel = new UtilizationModelFull();
+
+		Cloudlet[] cloudlet = new Cloudlet[cloudlets];
+
+		for(int i=0;i<cloudlets;i++){
+			cloudlet[i] = new Cloudlet(i, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
+			// setting the owner of these Cloudlets
+			cloudlet[i].setUserId(userId);
+			list.add(cloudlet[i]);
+		}
+
+		return list;
+	}
+
+
 	////////////////////////// STATIC METHODS ///////////////////////
 
 	/**
 	 * Creates main() to run this example
 	 */
 	public static void main(String[] args) {
-		Log.printLine("Starting Simulation...");
+		Log.printLine("Starting CloudSimExample6...");
 
 		try {
 			// First step: Initialize the CloudSim package. It should be called
@@ -97,9 +129,7 @@ public class Simulation1 {
 
 			//Fourth step: Create VMs and Cloudlets and send them to broker
 			vmlist = createVM(brokerId,20); //creating 20 vms
-			
-			//cloudletList = createCloudlet(brokerId,40); // creating 40 cloudlets
-			cloudletList = createCloudLets(brokerId); // creating 40 cloudlets
+			cloudletList = createCloudlet(brokerId,40); // creating 40 cloudlets
 
 			broker.submitVmList(vmlist);
 			broker.submitCloudletList(cloudletList);
@@ -114,7 +144,7 @@ public class Simulation1 {
 
 			printCloudletList(newList);
 
-			Log.printLine("--- Simulation finished!");
+			Log.printLine("CloudSimExample6 finished!");
 		}
 		catch (Exception e)
 		{
@@ -278,20 +308,4 @@ public class Simulation1 {
 		}
 
 	}
-	
-	private static List<Cloudlet> createCloudLets(int userId) throws FileNotFoundException{
-		/** The cloudlet list. */
-		List<Cloudlet> cloudletList;
-		//Read Cloudlets from workload file in the swf format
-		WorkloadFileReader workloadFileReader = new WorkloadFileReader("c:\\Users\\Vinicius\\Desenvolvimento\\Simulation\\workload\\NASA-iPSC-1993-3.swf", 1);
-		//generate cloudlets from workload file
-		cloudletList = workloadFileReader.generateWorkload();
-		
-		for (Cloudlet cldt : cloudletList) {
-			cldt.setUserId(userId);
-		}
-		
-		
-		return cloudletList;
-		}
 }
