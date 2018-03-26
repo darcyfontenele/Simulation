@@ -1,11 +1,17 @@
 package simulation;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
 
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.CloudletSchedulerTimeShared;
@@ -258,8 +264,21 @@ public class Simulation1 {
 		Cloudlet cloudlet;
 
 		String indent = "    ";
-		Log.printLine();
+		
+		try {
+			OutputStream os = new FileOutputStream(".//result//result.txt");
+			Log.setOutput(os);
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date dateStarted = new Date();
 		Log.printLine("========== OUTPUT ==========");
+		Log.printLine("Started at:" + (dateFormat.format(dateStarted)));
+		
 		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent +
 				"Data center ID" + indent + "VM ID" + indent + indent + "Time" + indent + "Start Time" + indent + "Finish Time");
 
@@ -276,14 +295,16 @@ public class Simulation1 {
 						indent + indent + dft.format(cloudlet.getExecStartTime())+ indent + indent + indent + dft.format(cloudlet.getFinishTime()));
 			}
 		}
-
+		Date dateFinished = new Date();
+		Log.printLine("Finished at:" + (dateFormat.format(dateFinished)));
+		Log.printLine("============================");
 	}
 	
 	private static List<Cloudlet> createCloudLets(int userId) throws FileNotFoundException{
 		/** The cloudlet list. */
 		List<Cloudlet> cloudletList;
 		//Read Cloudlets from workload file in the swf format
-		WorkloadFileReader workloadFileReader = new WorkloadFileReader("c:\\Users\\Vinicius\\Desenvolvimento\\Simulation\\workload\\NASA-iPSC-1993-3.swf", 1);
+		WorkloadFileReader workloadFileReader = new WorkloadFileReader(".//workload//NASA-iPSC-1993-3.swf", 1);
 		//generate cloudlets from workload file
 		cloudletList = workloadFileReader.generateWorkload();
 		
