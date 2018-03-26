@@ -78,9 +78,20 @@ public class Simulation1 {
 	 * Creates main() to run this example
 	 */
 	public static void main(String[] args) {
-		Log.printLine("Starting Simulation...");
+		//Log.printLine("Starting Simulation...");
+		System.out.println("Starting Simulation...");
 
 		try {
+			
+			try {
+				OutputStream os = new FileOutputStream(".//result//result.txt");
+				Log.setOutput(os);
+				
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			// First step: Initialize the CloudSim package. It should be called
 			// before creating any entities.
 			int num_user = 1;   // number of grid users
@@ -109,18 +120,28 @@ public class Simulation1 {
 
 			broker.submitVmList(vmlist);
 			broker.submitCloudletList(cloudletList);
+			
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			Date dateStarted = new Date();
+			Log.printLine("========== OUTPUT ==========");
+			Log.printLine("Started at:" + (dateFormat.format(dateStarted)));
 
 			// Fifth step: Starts the simulation
 			CloudSim.startSimulation();
-
+			
 			// Final step: Print results when simulation is over
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
 
 			CloudSim.stopSimulation();
 
 			printCloudletList(newList);
-
-			Log.printLine("--- Simulation finished!");
+			
+			Date dateFinished = new Date();
+			Log.printLine("Finished at:" + (dateFormat.format(dateFinished)));
+			Log.printLine("============================");
+			
+			System.out.println("Simulation finished!");
+			//Log.printLine("--- Simulation finished!");
 		}
 		catch (Exception e)
 		{
@@ -265,19 +286,7 @@ public class Simulation1 {
 
 		String indent = "    ";
 		
-		try {
-			OutputStream os = new FileOutputStream(".//result//result.txt");
-			Log.setOutput(os);
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date dateStarted = new Date();
-		Log.printLine("========== OUTPUT ==========");
-		Log.printLine("Started at:" + (dateFormat.format(dateStarted)));
 		
 		Log.printLine("Cloudlet ID" + indent + "STATUS" + indent +
 				"Data center ID" + indent + "VM ID" + indent + indent + "Time" + indent + "Start Time" + indent + "Finish Time");
@@ -295,9 +304,7 @@ public class Simulation1 {
 						indent + indent + dft.format(cloudlet.getExecStartTime())+ indent + indent + indent + dft.format(cloudlet.getFinishTime()));
 			}
 		}
-		Date dateFinished = new Date();
-		Log.printLine("Finished at:" + (dateFormat.format(dateFinished)));
-		Log.printLine("============================");
+		
 	}
 	
 	private static List<Cloudlet> createCloudLets(int userId) throws FileNotFoundException{
