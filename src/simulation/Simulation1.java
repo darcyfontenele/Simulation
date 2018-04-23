@@ -50,12 +50,16 @@ public class Simulation1 {
 		//Creates a container to store VMs. This list is passed to the broker later
 		LinkedList<Vm> list = new LinkedList<Vm>();
 
+		/* 
+		 * VM Like m4.xlarge
+		 */
+		
 		//VM Parameters
-		long size = 10000; //image size (MB)
-		int ram = 512; //vm memory (MB)
+		long size = 25600000; //image size (MB)
+		int ram = 8192; //vm memory (MB)
 		int mips = 1000;
-		long bw = 1000;
-		int pesNumber = 1; //number of cpus
+		long bw = 10000;
+		int pesNumber = 2; //number of cpus
 		String vmm = "Xen"; //VMM name
 
 		//create VMs
@@ -104,16 +108,16 @@ public class Simulation1 {
 			// Second step: Create Datacenters
 			//Datacenters are the resource providers in CloudSim. We need at list one of them to run a CloudSim simulation
 			@SuppressWarnings("unused")
-			Datacenter datacenter0 = createDatacenter("Datacenter_0");
-			@SuppressWarnings("unused")
-			Datacenter datacenter1 = createDatacenter("Datacenter_1");
+			Datacenter datacenter0 = createDatacenter("Standart_Datacenter");
+			//@SuppressWarnings("unused")
+			//Datacenter datacenter1 = createDatacenter("Datacenter_1");
 
 			//Third step: Create Broker
 			DatacenterBroker broker = createBroker();
 			int brokerId = broker.getId();
 
 			//Fourth step: Create VMs and Cloudlets and send them to broker
-			vmlist = createVM(brokerId,20); //creating 20 vms
+			vmlist = createVM(brokerId,2); //creating 20 vms
 			
 			//cloudletList = createCloudlet(brokerId,40); // creating 40 cloudlets
 			cloudletList = createCloudLets(brokerId); // creating 40 cloudlets
@@ -162,14 +166,14 @@ public class Simulation1 {
 		//    a Machine.
 		List<Pe> peList1 = new ArrayList<Pe>();
 
-		int mips = 1000;
+		int mips = 2000;
 
 		// 3. Create PEs and add these into the list.
 		//for a quad-core machine, a list of 4 PEs is required:
-		peList1.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
-		peList1.add(new Pe(1, new PeProvisionerSimple(mips)));
-		peList1.add(new Pe(2, new PeProvisionerSimple(mips)));
-		peList1.add(new Pe(3, new PeProvisionerSimple(mips)));
+//		peList1.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
+//		peList1.add(new Pe(1, new PeProvisionerSimple(mips)));
+//		peList1.add(new Pe(2, new PeProvisionerSimple(mips)));
+//		peList1.add(new Pe(3, new PeProvisionerSimple(mips)));
 
 		//Another list, for a dual-core machine
 		List<Pe> peList2 = new ArrayList<Pe>();
@@ -178,9 +182,10 @@ public class Simulation1 {
 		peList2.add(new Pe(1, new PeProvisionerSimple(mips)));
 
 		//4. Create Hosts with its id and list of PEs and add them to the list of machines
+		
 		int hostId=0;
-		int ram = 2048; //host memory (MB)
-		long storage = 1000000; //host storage
+		int ram = 8192; //host memory (MB)
+		long storage = 25600000; //host storage
 		int bw = 10000;
 
 		hostList.add(
@@ -189,8 +194,8 @@ public class Simulation1 {
     				new RamProvisionerSimple(ram),
     				new BwProvisionerSimple(bw),
     				storage,
-    				peList1,
-    				new VmSchedulerTimeShared(peList1)
+    				peList2,
+    				new VmSchedulerTimeShared(peList2)
     			)
     		); // This is our first machine
 
