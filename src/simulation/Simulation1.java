@@ -300,8 +300,8 @@ public class Simulation1 {
 		for (int i = 0; i < size; i++) {
 			cloudlet = list.get(i);
 			Log.print(indent + cloudlet.getCloudletId() + indent + indent);
-
-			if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS){
+			
+			if (cloudlet.getCloudletStatusString() == "Success"){
 				Log.print("SUCCESS");
 
 				Log.printLine( indent + indent + cloudlet.getResourceId() + indent + indent + indent + cloudlet.getVmId() +
@@ -316,7 +316,7 @@ public class Simulation1 {
 		/** The cloudlet list. */
 		List<Cloudlet> cloudletList;
 		//Read Cloudlets from workload file in the swf format
-		WorkloadFileReader workloadFileReader = new WorkloadFileReader(".//workload//NASA-iPSC-1993-3.swf", 1);
+		WorkloadFileReader workloadFileReader = new WorkloadFileReader(".//workload//teste.swf", 1);
 		//generate cloudlets from workload file
 		cloudletList = workloadFileReader.generateWorkload();
 		
